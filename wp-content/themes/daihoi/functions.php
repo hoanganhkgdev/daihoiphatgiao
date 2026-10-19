@@ -15,7 +15,7 @@ add_action( 'after_setup_theme', function () {
 
 add_action( 'wp_enqueue_scripts', function () {
 	$ver = wp_get_theme()->get( 'Version' );
-	wp_enqueue_style( 'daihoi-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&subset=vietnamese&display=swap', array(), null );
+	wp_enqueue_style( 'daihoi-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=vietnamese', array(), null );
 	wp_enqueue_style( 'daihoi', get_template_directory_uri() . '/assets/main.css', array( 'daihoi-fonts' ), filemtime( get_template_directory() . '/assets/main.css' ) );
 	wp_enqueue_script( 'daihoi', get_template_directory_uri() . '/assets/main.js', array(), filemtime( get_template_directory() . '/assets/main.js' ), true );
 } );
@@ -29,10 +29,12 @@ add_filter( 'excerpt_length', fn() => 28 );
 add_filter( 'excerpt_more', fn() => '…' );
 
 // Nhãn menu: thêm class cho liên kết
-add_filter( 'nav_menu_link_attributes', function ( $atts ) {
-	$atts['class'] = trim( ( $atts['class'] ?? '' ) . ' nav-link' );
+add_filter( 'nav_menu_link_attributes', function ( $atts, $item, $args ) {
+	if ( isset( $args->theme_location ) && 'primary' === $args->theme_location ) {
+		$atts['class'] = trim( ( $atts['class'] ?? '' ) . ' nav-link' );
+	}
 	return $atts;
-} );
+}, 10, 3 );
 
 // Gỡ bớt thứ không cần
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -59,7 +61,10 @@ function daihoi_icon( $name, $size = 24 ) {
 		'pin'      => '<path d="M12 21.5s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9.5" r="2.6"/>',
 		'lotus'    => '<path d="M12 4c2.2 2.3 3.2 4.6 3.2 7.2 0 2.7-1.4 4.9-3.2 6.3-1.8-1.4-3.2-3.6-3.2-6.3C8.8 8.6 9.8 6.3 12 4Z"/><path d="M8.6 9.6C5.9 9.9 3.7 11.9 3 15c3.3.2 6-.2 9 3.2"/><path d="M15.4 9.6c2.7.3 4.9 2.3 5.6 5.4-3.3.2-6-.2-9 3.2"/><path d="M5 19.5c2.2.8 4.6 1 7 1s4.8-.2 7-1"/>',
 		'wheel'    => '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4"/><path d="M12 3v6.6M12 14.4V21M3 12h6.6M14.4 12H21M5.6 5.6l4.7 4.7M13.7 13.7l4.7 4.7M18.4 5.6l-4.7 4.7M10.3 13.7l-4.7 4.7"/>',
+		'file'     => '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+		'external' => '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/>',
 		'arrow-up' => '<path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/>',
+		'arrow-down' => '<path d="M12 5v14M5.5 12.5 12 19l6.5-6.5"/>',
 		'arrow-left'  => '<path d="M19 12H5M11.5 5.5 5 12l6.5 6.5"/>',
 		'arrow-right' => '<path d="M5 12h14M12.5 5.5 19 12l-6.5 6.5"/>',
 	);
@@ -67,4 +72,32 @@ function daihoi_icon( $name, $size = 24 ) {
 		return '';
 	}
 	return '<svg class="icon icon-' . esc_attr( $name ) . '" width="' . (int) $size . '" height="' . (int) $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths[ $name ] . '</svg>';
+}
+
+// Chuyên mục dùng cho các mục trên trang chủ (theo đường dẫn chuyên mục).
+const DAIHOI_DOC_CATEGORY  = 'van-kien-dai-hoi';
+const DAIHOI_NEWS_CATEGORY = 'tin-tuc-su-kien';
+
+// Tin tức Đại hội được đăng tại Phật sự Online; các nút "Tin tức" trên site dẫn tới trang này.
+const DAIHOI_NEWS_URL = 'https://phatsuonline.vn/tin/dai-hoi-phat-giao-toan-quoc-nk-2026-2031-41';
+
+add_action( 'pre_get_posts', function ( $q ) {
+	if ( ! is_admin() && $q->is_main_query() && $q->is_category( DAIHOI_DOC_CATEGORY ) ) {
+		$q->set( 'posts_per_page', 12 );
+	}
+} );
+
+// Đường dẫn tới trang chuyên mục theo slug (về trang chủ nếu chuyên mục chưa có).
+function daihoi_category_url( $slug ) {
+	$cat = get_category_by_slug( $slug );
+	return $cat ? get_category_link( $cat ) : home_url( '/' );
+}
+
+// Lịch ba ngày Đại hội (mục "Chương trình" trên trang chủ). Cập nhật nội dung thật tại đây hoặc qua filter.
+function daihoi_programme_days() {
+	return apply_filters( 'daihoi_programme_days', array(
+		array( 'date' => '2026-11-05', 'label' => 'Ngày thứ nhất', 'title' => 'Khai mạc Đại hội', 'desc' => 'Chương trình chính thức sẽ được cập nhật.' ),
+		array( 'date' => '2026-11-06', 'label' => 'Ngày thứ hai', 'title' => 'Chương trình Đại hội', 'desc' => 'Chương trình chính thức sẽ được cập nhật.' ),
+		array( 'date' => '2026-11-07', 'label' => 'Ngày thứ ba', 'title' => 'Hoàn mãn Đại hội', 'desc' => 'Chương trình chính thức sẽ được cập nhật.' ),
+	) );
 }
