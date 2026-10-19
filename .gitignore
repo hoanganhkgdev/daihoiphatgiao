@@ -1,0 +1,10 @@
+# Chỉ theo dõi theme tự viết: bỏ qua mọi thứ, rồi cho phép lại theme daihoi.
+/*
+!/.gitignore
+!/README.md
+!/wp-content/
+/wp-content/*
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/daihoi/
+.DS_Store
