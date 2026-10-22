@@ -52,18 +52,26 @@ $entry_cards = array(
 <section class="section schedule" id="chuong-trinh">
 	<div class="wrap">
 		<header class="schedule-head">
-			<div><p class="label">Lịch Đại hội</p><h2>Ba ngày hướng về một tầm nhìn chung</h2></div>
+			<div><h2>VĂN KIỆN ĐẠI HỘI</h2></div>
 			<a class="text-link" href="<?php echo esc_url( $doc_url ); ?>">Theo dõi văn kiện <?php echo daihoi_icon( 'arrow-right', 18 ); ?></a>
 		</header>
 		<ol class="schedule-days">
-			<?php foreach ( daihoi_programme_days() as $i => $day ) : $ts = strtotime( $day['date'] ); ?>
-				<li>
-					<time datetime="<?php echo esc_attr( $day['date'] ); ?>"><b><?php echo esc_html( wp_date( 'd', $ts ) ); ?></b><span>Tháng <?php echo esc_html( wp_date( 'm', $ts ) ); ?></span></time>
-					<div class="schedule-body">
-						<small><?php echo esc_html( $day['label'] ); ?></small>
-						<h3><?php echo esc_html( $day['title'] ); ?></h3>
-						<p><?php echo esc_html( $day['desc'] ); ?></p>
-					</div>
+			<?php foreach ( daihoi_programme_days() as $i => $day ) :
+				$num   = isset( $day['num'] ) ? $day['num'] : sprintf( '%02d', $i + 1 );
+				$badge = isset( $day['badge'] ) ? $day['badge'] : '';
+				$url   = ! empty( $day['url'] ) ? $day['url'] : '';
+				$cta   = ! empty( $day['cta'] ) ? $day['cta'] : 'Xem chi tiết';
+			?>
+				<li<?php if ( $url ) : ?> class="has-link"<?php endif; ?>>
+					<?php if ( $url ) : ?><a class="schedule-card-link" href="<?php echo esc_url( $url ); ?>"><?php endif; ?>
+						<time><b><?php echo esc_html( $num ); ?></b><?php if ( $badge ) : ?><span><?php echo esc_html( $badge ); ?></span><?php endif; ?></time>
+						<div class="schedule-body">
+							<?php if ( ! empty( $day['label'] ) ) : ?><small><?php echo esc_html( $day['label'] ); ?></small><?php endif; ?>
+							<h3><?php echo esc_html( $day['title'] ); ?></h3>
+							<?php if ( ! empty( $day['desc'] ) ) : ?><p><?php echo esc_html( $day['desc'] ); ?></p><?php endif; ?>
+							<?php if ( $url ) : ?><span class="schedule-cta"><?php echo esc_html( $cta ); ?> <?php echo daihoi_icon( 'arrow-right', 16 ); ?></span><?php endif; ?>
+						</div>
+					<?php if ( $url ) : ?></a><?php endif; ?>
 				</li>
 			<?php endforeach; ?>
 		</ol>
