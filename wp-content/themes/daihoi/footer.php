@@ -13,7 +13,7 @@
 	<div class="wrap footer-grid">
 		<div class="footer-about">
 			<a class="footer-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/logo-redesign.png' ) . '?v=' . filemtime( get_theme_file_path( 'assets/logo-redesign.png' ) ) ); ?>" alt="Đại Hội Phật Giáo – Giáo Hội Phật Giáo Việt Nam" width="1200" height="400" loading="lazy">
+				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/logo-x.png' ) . '?v=' . filemtime( get_theme_file_path( 'assets/logo-x.png' ) ) ); ?>" alt="Đại Hội Phật Giáo – Giáo Hội Phật Giáo Việt Nam" width="839" height="723" loading="lazy">
 			</a>
 			<p>Trang thông tin Đại hội đại biểu Phật giáo toàn quốc lần thứ X, nhiệm kỳ 2026 – 2031.</p>
 			<p class="footer-tags"><span>05 – 07/11/2026</span><span>TP. Hồ Chí Minh</span></p>

@@ -19,7 +19,7 @@
 <header class="site-header" id="top">
 	<div class="wrap header-inner">
 		<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<img class="brand-logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/logo-redesign.png' ) . '?v=' . filemtime( get_theme_file_path( 'assets/logo-redesign.png' ) ) ); ?>" alt="Đại Hội Phật Giáo – Giáo Hội Phật Giáo Việt Nam" width="1200" height="400">
+			<img class="brand-logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/logo-x.png' ) . '?v=' . filemtime( get_theme_file_path( 'assets/logo-x.png' ) ) ); ?>" alt="Đại Hội Phật Giáo – Giáo Hội Phật Giáo Việt Nam" width="839" height="723">
 		</a>
 		<button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Mở menu"><span></span><span></span><span></span></button>
 		<nav class="primary-nav" id="primary-nav" aria-label="Menu chính">
