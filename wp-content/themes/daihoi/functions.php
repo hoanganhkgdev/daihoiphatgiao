@@ -15,8 +15,9 @@ add_action( 'after_setup_theme', function () {
 
 add_action( 'wp_enqueue_scripts', function () {
 	$ver = wp_get_theme()->get( 'Version' );
-	wp_enqueue_style( 'daihoi-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=vietnamese', array(), null );
+	wp_enqueue_style( 'daihoi-fonts', 'https://fonts.googleapis.com/css2?family=Merriweather:wght@600;700;800;900&family=Roboto:wght@400;500;600;700;900&display=swap&subset=vietnamese', array(), null );
 	wp_enqueue_style( 'daihoi', get_template_directory_uri() . '/assets/main.css', array( 'daihoi-fonts' ), filemtime( get_template_directory() . '/assets/main.css' ) );
+	wp_enqueue_style( 'daihoi-modern', get_template_directory_uri() . '/assets/modern.css', array( 'daihoi' ), filemtime( get_template_directory() . '/assets/modern.css' ) );
 	wp_enqueue_script( 'daihoi', get_template_directory_uri() . '/assets/main.js', array(), filemtime( get_template_directory() . '/assets/main.js' ), true );
 } );
 
@@ -75,6 +76,7 @@ function daihoi_icon( $name, $size = 24 ) {
 }
 
 // Chuyên mục dùng cho các mục trên trang chủ (theo đường dẫn chuyên mục).
+const DAIHOI_DOC_PAGE_ID   = 39;
 const DAIHOI_DOC_CATEGORY  = 'van-kien-dai-hoi';
 const DAIHOI_NEWS_CATEGORY = 'tin-tuc-su-kien';
 
@@ -87,10 +89,16 @@ add_action( 'pre_get_posts', function ( $q ) {
 	}
 } );
 
+// Đường dẫn trang Văn kiện theo ID để luôn theo permalink mới khi đổi slug.
+function daihoi_document_url() {
+	$url = get_permalink( DAIHOI_DOC_PAGE_ID );
+	return $url ? $url : home_url( '/' );
+}
+
 // Đường dẫn tới trang chuyên mục theo slug (về trang chủ nếu chuyên mục chưa có).
 function daihoi_category_url( $slug ) {
 	if ( DAIHOI_DOC_CATEGORY === $slug ) {
-		return home_url( '/muc-luc-van-kien-dai-hoi-dai-bieu-phat-giao-toan-quoc-lan-thu-x/' );
+		return daihoi_document_url();
 	}
 	$cat = get_category_by_slug( $slug );
 	return $cat ? get_category_link( $cat ) : home_url( '/' );
@@ -114,7 +122,7 @@ function daihoi_programme_days() {
 			'label' => 'Văn kiện Đại hội',
 			'title' => 'Văn kiện Đại hội Đại biểu Phật giáo toàn quốc lần thứ X, nhiệm kỳ 2026 – 2031',
 			'desc'  => '',
-			'url'   => home_url( '/muc-luc-van-kien-dai-hoi-dai-bieu-phat-giao-toan-quoc-lan-thu-x/' ),
+			'url'   => daihoi_document_url(),
 			'cta'   => 'Xem mục lục văn kiện',
 		),
 		array(
@@ -173,7 +181,8 @@ add_filter( 'the_content', function ( $content ) {
 	$date_text  = $intro_lines[2] ?? 'Từ ngày 05 đến ngày 07 tháng 11 năm 2026';
 	$loc_text   = $intro_lines[3] ?? '';
 	$loc_text   = trim( $loc_text, "() 	
- " );
+
+ " );
 	$loc_text   = preg_replace( '/^Địa điểm:\s*/iu', '', $loc_text );
 
 	// Phân tích các dòng <tr> trong bảng
@@ -284,11 +293,14 @@ add_filter( 'the_content', function ( $content ) {
 	?>
 	<div class="prog-doc">
 		<div class="prog-intro">
-			<div class="prog-intro-badge">Văn bản chính thức</div>
-			<h2 class="prog-intro-title"><?php echo esc_html( $main_title ); ?></h2>
-			<?php if ( $sub_title ) : ?>
-				<p class="prog-intro-sub"><strong><?php echo esc_html( $sub_title ); ?></strong></p>
-			<?php endif; ?>
+			<div class="prog-intro-heading">
+				<div>
+					<div class="prog-intro-badge">Văn bản chính thức</div>
+					<h2 class="prog-intro-title">Lịch trình tổng quan</h2>
+					<?php if ( $sub_title ) : ?><p class="prog-intro-sub"><?php echo esc_html( $sub_title ); ?></p><?php endif; ?>
+				</div>
+				<div class="prog-intro-stat"><strong><?php echo esc_html( sprintf( '%02d', count( $days ) ) ); ?></strong><small>ngày hoạt động</small></div>
+			</div>
 			<div class="prog-meta-grid">
 				<div class="prog-meta-item">
 					<span class="prog-meta-label">Thời gian tổ chức</span>
@@ -388,7 +400,8 @@ add_filter( 'the_content', function ( $content ) {
 		foreach ( $m[1] as $line ) {
 			$clean = trim( html_entity_decode( wp_strip_all_tags( $line ), ENT_QUOTES, 'UTF-8' ) );
 			$clean = trim( $clean, " 	
- Â " );
+
+ Â " );
 			if ( $clean !== '' && strpos( $clean, '❖' ) === false ) {
 				$intro_lines[] = $clean;
 			}
@@ -432,23 +445,28 @@ add_filter( 'the_content', function ( $content ) {
 	if ( empty( $items ) ) {
 		return $content;
 	}
+	$available_docs = count( array_filter( $items, static fn( $item ) => ! empty( $item['url'] ) ) );
+	$pending_docs   = count( $items ) - $available_docs;
 
 	ob_start();
 	?>
 	<div class="prog-doc toc-doc">
-		<div class="prog-intro toc-intro">
-			<div class="prog-intro-badge">Danh mục tài liệu chính thức</div>
-			<h2 class="prog-intro-title"><?php echo esc_html( $main_title ); ?></h2>
-			<p class="prog-intro-sub">
-				<strong><?php echo esc_html( $sub_line1 ); ?></strong>
-				<?php if ( $sub_line2 ) : ?><br><span class="toc-term"><?php echo esc_html( $sub_line2 ); ?></span><?php endif; ?>
-			</p>
-			<div class="toc-ornament" aria-hidden="true"><span>❖</span><span>❖</span><span>❖</span></div>
-		</div>
+		<header class="toc-catalogue-head">
+			<div>
+				<p class="toc-catalogue-kicker"><i></i>Danh mục tài liệu chính thức</p>
+				<h2>Danh mục văn kiện</h2>
+				<p>Chọn văn kiện đã phát hành để xem nội dung chi tiết. Danh mục sẽ tiếp tục được cập nhật theo tiến độ của Ban Tổ chức.</p>
+				<div class="toc-availability" aria-label="Tình trạng tài liệu">
+					<span class="is-ready"><i></i><strong><?php echo esc_html( $available_docs ); ?></strong> đã phát hành</span>
+					<?php if ( $pending_docs > 0 ) : ?><span class="is-pending"><i></i><strong><?php echo esc_html( $pending_docs ); ?></strong> đang cập nhật</span><?php endif; ?>
+				</div>
+			</div>
+			<span class="toc-catalogue-count"><strong><?php echo esc_html( sprintf( '%02d', count( $items ) ) ); ?></strong><small>tài liệu</small></span>
+		</header>
 
 		<ol class="toc-list">
 			<?php foreach ( $items as $it ) : ?>
-				<li class="toc-item<?php echo $it['url'] ? ' is-linked' : ''; ?>">
+				<li class="toc-item<?php echo $it['url'] ? ' is-linked' : ' is-pending'; ?>">
 					<?php if ( $it['url'] ) : ?><a class="toc-link" href="<?php echo esc_url( $it['url'] ); ?>"><?php else : ?><div class="toc-link"><?php endif; ?>
 						<span class="toc-num"><?php echo esc_html( $it['num'] ); ?></span>
 						<span class="toc-icon"><?php echo daihoi_icon( 'file', 22 ); ?></span>
@@ -502,7 +520,8 @@ add_filter( 'the_content', function ( $content ) {
 				}
 				$title_text = trim( html_entity_decode( wp_strip_all_tags( $title_raw ), ENT_QUOTES, 'UTF-8' ) );
 				$title_text = rtrim( $title_text, ". 	
- –-" );
+
+ –-" );
 				$title_text = trim( $title_text );
 				if ( $title_text === '' ) {
 					continue;
@@ -677,9 +696,9 @@ add_action( 'wp_footer', function () {
 }, 99 );
 
 
-// Đảm bảo mọi nút "Văn Kiện Đại Hội" trên menu đầu trang, chân trang và đường dẫn chuyên mục cũ đều dẫn thẳng vào trang Mục lục Văn kiện Đại hội (ID 39)
+// Đảm bảo mọi nút "Văn Kiện Đại Hội" luôn theo permalink hiện tại của trang ID 39.
 add_filter( 'nav_menu_link_attributes', function ( $atts, $item, $args ) {
-	$mucluc_url = home_url( '/muc-luc-van-kien-dai-hoi-dai-bieu-phat-giao-toan-quoc-lan-thu-x/' );
+	$mucluc_url = daihoi_document_url();
 	$href  = $atts['href'] ?? '';
 	$title = mb_strtolower( trim( wp_strip_all_tags( $item->title ?? '' ) ), 'UTF-8' );
 	if ( strpos( $href, 'van-kien-dai-hoi' ) !== false || strpos( $title, 'văn kiện' ) !== false ) {
@@ -702,7 +721,18 @@ add_filter( 'wp_nav_menu_objects', function ( $items ) {
 
 add_action( 'template_redirect', function () {
 	if ( is_category( DAIHOI_DOC_CATEGORY ) ) {
-		wp_safe_redirect( home_url( '/muc-luc-van-kien-dai-hoi-dai-bieu-phat-giao-toan-quoc-lan-thu-x/' ), 301 );
+		wp_safe_redirect( daihoi_document_url(), 301 );
 		exit;
 	}
+} );
+
+// Giữ giao diện Văn kiện theo ID trang, không phụ thuộc slug của trang.
+add_filter( 'template_include', function ( $template ) {
+	if ( is_page( DAIHOI_DOC_PAGE_ID ) ) {
+		$document_template = get_theme_file_path( 'page-muc-luc-van-kien-dai-hoi-dai-bieu-phat-giao-toan-quoc-lan-thu-x.php' );
+		if ( file_exists( $document_template ) ) {
+			return $document_template;
+		}
+	}
+	return $template;
 } );

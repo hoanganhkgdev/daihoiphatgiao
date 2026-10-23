@@ -13,20 +13,10 @@ $entry_cards = array(
 	),
 );
 ?>
-<section class="hero">
-	<div class="hero-frame">
-		<img class="hero-img" src="<?php echo esc_url( get_theme_file_uri( 'assets/hero-dai-hoi-x-2026.jpg' ) ); ?>" alt="Không gian sân khấu trang trọng hướng tới Đại hội đại biểu Phật giáo toàn quốc lần thứ X" width="1672" height="941" fetchpriority="high" decoding="async">
-		<div class="hero-caption">
-			<p class="hero-eyebrow"><?php echo daihoi_icon( 'lotus', 18 ); ?> Giáo Hội Phật Giáo Việt Nam</p>
-			<h1><small>Đại hội đại biểu Phật giáo toàn quốc</small><strong>Lần thứ X</strong></h1>
-			<span class="hero-term">Nhiệm kỳ 2026 – 2031</span>
-			<p class="hero-theme"><b>Kỷ cương</b><i></i><b>Đổi mới</b><i></i><b>Hiệu lực</b><i></i><b>Hiệu quả</b></p>
-			<div class="hero-actions">
-				<a class="hero-btn hero-btn-gold" href="<?php echo esc_url( daihoi_category_url( DAIHOI_DOC_CATEGORY ) ); ?>">Văn kiện Đại hội <?php echo daihoi_icon( 'arrow-right', 18 ); ?></a>
-				<a class="hero-btn hero-btn-line" href="<?php echo esc_url( DAIHOI_NEWS_URL ); ?>" target="_blank" rel="noopener noreferrer">Tin tức</a>
-			</div>
-		</div>
-		<div class="hero-corner" aria-hidden="true"><span>X</span><small>2026<br>2031</small></div>
+<section class="hero hero-banner">
+	<div class="hero-frame hero-banner-frame">
+		<img class="hero-img" src="<?php echo esc_url( get_theme_file_uri( 'assets/hero-dai-hoi-x-banner-v2.png' ) . '?v=' . filemtime( get_theme_file_path( 'assets/hero-dai-hoi-x-banner-v2.png' ) ) ); ?>" alt="Biểu trưng Đại hội Phật giáo toàn quốc lần thứ X bên Học viện Phật giáo Việt Nam tại Thành phố Hồ Chí Minh" width="2172" height="724" fetchpriority="high" decoding="async">
+		<h1 class="hero-accessible-title">Đại hội đại biểu Phật giáo toàn quốc lần thứ X, nhiệm kỳ 2026 – 2031</h1>
 	</div>
 </section>
 
@@ -34,17 +24,21 @@ $entry_cards = array(
 	<div class="wrap">
 		<div class="countdown-panel">
 			<div class="countdown-title">
-				<span class="countdown-badge"><span class="live-dot"></span>Sắp diễn ra</span>
-				<h2>Đếm ngược đến ngày khai mạc</h2>
-				<p class="countdown-date"><?php echo daihoi_icon( 'calendar', 20 ); ?> <strong>05.11.2026</strong><i></i>Khai mạc Đại hội</p>
+				<span class="countdown-badge"><span class="live-dot"></span>Đại hội lần thứ X</span>
+				<p class="countdown-kicker">Chờ đón thời khắc trọng đại</p>
+				<h2>Đếm ngược đến <span>ngày khai mạc</span></h2>
+				<div class="countdown-date"><?php echo daihoi_icon( 'calendar', 20 ); ?><span><small>Ngày khai mạc</small><strong>05.11.2026</strong></span></div>
 			</div>
-			<div class="countdown" data-start="<?php echo esc_attr( daihoi_event_start() ); ?>" aria-live="off">
-				<div><b data-u="d">00</b><span>Ngày</span></div>
-				<div><b data-u="h">00</b><span>Giờ</span></div>
-				<div><b data-u="m">00</b><span>Phút</span></div>
-				<div><b data-u="s">00</b><span>Giây</span></div>
+			<div class="countdown-clock">
+				<p class="countdown-clock-label"><i></i><span>Thời gian còn lại</span><i></i></p>
+				<div class="countdown" data-start="<?php echo esc_attr( daihoi_event_start() ); ?>" aria-live="off">
+					<div><b data-u="d">00</b><span>Ngày</span></div>
+					<div><b data-u="h">00</b><span>Giờ</span></div>
+					<div><b data-u="m">00</b><span>Phút</span></div>
+					<div><b data-u="s">00</b><span>Giây</span></div>
+				</div>
 			</div>
-			<div class="event-place"><span class="event-place-ico"><?php echo daihoi_icon( 'pin', 22 ); ?></span><span><small>Địa điểm tổ chức</small>Học viện Phật giáo Việt Nam<br>tại TP. Hồ Chí Minh</span></div>
+			<div class="event-place"><span class="event-place-ico"><?php echo daihoi_icon( 'pin', 22 ); ?></span><div class="event-place-copy"><small>Địa điểm tổ chức</small><strong>Học viện Phật giáo Việt Nam</strong><em>TP. Hồ Chí Minh</em></div></div>
 		</div>
 	</div>
 </section>
@@ -52,23 +46,41 @@ $entry_cards = array(
 <section class="section schedule" id="chuong-trinh">
 	<div class="wrap">
 		<header class="schedule-head">
-			<div><h2>VĂN KIỆN ĐẠI HỘI</h2></div>
-			<a class="text-link" href="<?php echo esc_url( $doc_url ); ?>">Theo dõi văn kiện <?php echo daihoi_icon( 'arrow-right', 18 ); ?></a>
+			<div class="schedule-heading-copy">
+				<p class="schedule-kicker"><i></i><span>Kho tư liệu chính thức</span></p>
+				<h2>Văn kiện <em>Đại hội</em></h2>
+				<p class="schedule-intro">Tra cứu chương trình, văn kiện và các tham luận chính thức của Đại hội đại biểu Phật giáo toàn quốc <span class="text-nowrap">lần thứ X</span>.</p>
+			</div>
+			<a class="schedule-all" href="<?php echo esc_url( $doc_url ); ?>"><span>Xem toàn bộ văn kiện</span><?php echo daihoi_icon( 'arrow-right', 18 ); ?></a>
 		</header>
+		<?php
+		$document_icons = array( 'calendar', 'file', 'wheel' );
+		$document_descs = array(
+			'Chương trình làm việc, nghi lễ và các hoạt động trọng tâm trong thời gian diễn ra Đại hội.',
+			'Hệ thống báo cáo, nghị quyết và những văn bản chính thức phục vụ Đại hội.',
+			'Tổng hợp ý kiến, tham luận chuyên đề và nội dung kỷ yếu của chư Tôn đức, đại biểu.',
+		);
+		?>
 		<ol class="schedule-days">
 			<?php foreach ( daihoi_programme_days() as $i => $day ) :
 				$num   = isset( $day['num'] ) ? $day['num'] : sprintf( '%02d', $i + 1 );
 				$badge = isset( $day['badge'] ) ? $day['badge'] : '';
 				$url   = ! empty( $day['url'] ) ? $day['url'] : '';
 				$cta   = ! empty( $day['cta'] ) ? $day['cta'] : 'Xem chi tiết';
+				$icon  = isset( $document_icons[ $i ] ) ? $document_icons[ $i ] : 'file';
+				$desc  = ! empty( $day['desc'] ) ? $day['desc'] : ( isset( $document_descs[ $i ] ) ? $document_descs[ $i ] : '' );
+				$title = ! empty( $day['label'] ) ? $day['label'] : $day['title'];
 			?>
 				<li<?php if ( $url ) : ?> class="has-link"<?php endif; ?>>
-					<?php if ( $url ) : ?><a class="schedule-card-link" href="<?php echo esc_url( $url ); ?>"><?php endif; ?>
-						<time><b><?php echo esc_html( $num ); ?></b><?php if ( $badge ) : ?><span><?php echo esc_html( $badge ); ?></span><?php endif; ?></time>
+					<?php if ( $url ) : ?><a class="schedule-card-link" href="<?php echo esc_url( $url ); ?>" aria-label="<?php echo esc_attr( $day['title'] ); ?>"><?php endif; ?>
+						<div class="schedule-card-top">
+							<time><b><?php echo esc_html( $num ); ?></b><?php if ( $badge ) : ?><span><?php echo esc_html( $badge ); ?></span><?php endif; ?></time>
+							<span class="schedule-card-icon"><?php echo daihoi_icon( $icon, 25 ); ?></span>
+						</div>
 						<div class="schedule-body">
-							<?php if ( ! empty( $day['label'] ) ) : ?><small><?php echo esc_html( $day['label'] ); ?></small><?php endif; ?>
-							<h3><?php echo esc_html( $day['title'] ); ?></h3>
-							<?php if ( ! empty( $day['desc'] ) ) : ?><p><?php echo esc_html( $day['desc'] ); ?></p><?php endif; ?>
+							<small>Đại hội lần thứ X · 2026–2031</small>
+							<h3><?php echo esc_html( $title ); ?></h3>
+							<?php if ( $desc ) : ?><p><?php echo esc_html( $desc ); ?></p><?php endif; ?>
 							<?php if ( $url ) : ?><span class="schedule-cta"><?php echo esc_html( $cta ); ?> <?php echo daihoi_icon( 'arrow-right', 16 ); ?></span><?php endif; ?>
 						</div>
 					<?php if ( $url ) : ?></a><?php endif; ?>
@@ -79,23 +91,33 @@ $entry_cards = array(
 </section>
 
 <section class="entry-section" id="tin-tuc">
-	<div class="wrap entry-grid">
-		<?php foreach ( $entry_cards as $card ) :
+	<div class="wrap">
+		<header class="entry-section-head">
+			<p class="entry-section-kicker"><i></i><span>Truy cập nhanh</span><i></i></p>
+			<h2>Khám phá nội dung <em>Đại hội</em></h2>
+		</header>
+		<div class="entry-grid">
+		<?php foreach ( $entry_cards as $i => $card ) :
 			$ext = ! empty( $card['external'] );
 			$bg  = $card['image'] ? get_theme_file_uri( 'assets/hero-dai-hoi-x-2026.jpg' ) : '';
 			$term  = $ext ? null : get_category_by_slug( $card['slug'] );
 			$count = $term ? (int) $term->count : 0;
 		?>
-			<a class="entry-card" href="<?php echo esc_url( $card['url'] ); ?>"<?php if ( $ext ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php if ( $bg ) : ?> style="--bg:url('<?php echo esc_url( $bg ); ?>')"<?php endif; ?>>
-				<span class="entry-ico"><?php echo daihoi_icon( $card['icon'], 26 ); ?></span>
+			<a class="entry-card <?php echo $ext ? 'entry-card-news' : 'entry-card-docs'; ?>" href="<?php echo esc_url( $card['url'] ); ?>"<?php if ( $ext ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?><?php if ( $bg ) : ?> style="--bg:url('<?php echo esc_url( $bg ); ?>')"<?php endif; ?>>
+				<span class="entry-card-top">
+					<span class="entry-ico"><?php echo daihoi_icon( $card['icon'], 27 ); ?></span>
+					<span class="entry-status"><i></i><?php echo esc_html( $ext ? 'Cập nhật liên tục' : 'Tài liệu chính thức' ); ?></span>
+					<span class="entry-number" aria-hidden="true"><?php echo esc_html( sprintf( '%02d', $i + 1 ) ); ?></span>
+				</span>
 				<span class="entry-text">
 					<small><?php echo esc_html( $card['label'] ); ?></small>
 					<strong><?php echo esc_html( $card['title'] ); ?></strong>
 					<span><?php echo esc_html( $card['desc'] ); ?></span>
 				</span>
-				<span class="entry-foot"><?php if ( $count ) : ?><em><?php echo (int) $count; ?> bài viết</em><?php elseif ( $ext ) : ?><em>Phật sự Online</em><?php endif; ?><b><?php echo esc_html( $card['cta'] ); ?> <?php echo daihoi_icon( $ext ? 'external' : 'arrow-right', 18 ); ?></b></span>
+				<span class="entry-foot"><em><i></i><?php if ( $count ) : ?><?php echo (int) $count; ?> bài viết<?php elseif ( $ext ) : ?>Nguồn: Phật sự Online<?php else : ?>Đang cập nhật<?php endif; ?></em><b><span><?php echo esc_html( $card['cta'] ); ?></span><i class="entry-arrow"><?php echo daihoi_icon( $ext ? 'external' : 'arrow-right', 17 ); ?></i></b></span>
 			</a>
 		<?php endforeach; ?>
+		</div>
 	</div>
 </section>
 
